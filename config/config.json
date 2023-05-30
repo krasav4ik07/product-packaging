@@ -1,0 +1,4 @@
+{
+  "repo": "postgresql://postgres:admin@db-postgres:5432/packaging",
+  "port": ":8001"
+}

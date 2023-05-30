@@ -1,0 +1,37 @@
+version: '4.19'
+
+services:
+  app:
+    container_name: app_container
+    build: ./
+    command:
+      - ./product-packaging -path ./config/config.json
+    ports:
+      - 8001:8001
+
+    networks:
+      - mynet
+    depends_on:
+      - db-postgres
+
+  db-postgres:
+    container_name: db_postgres_container
+    restart: always
+    build: docker/db
+    environment:
+      POSTGRES_DB: "packaging"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - 8002:5432
+    networks:
+      - mynet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  mynet:
+    driver: bridge
